@@ -4,16 +4,16 @@ POST http://localhost:4000/property/add/e0380cc0-f311-4b83-a537-4910808e60f2
 Content-Type: application/json
 
 {
-	"name":"Sergio",
-	"propertyType":"apartment",
+	"name":"Takimu",
+	"propertyType":"hostel",
 	"details":{
-        "description":"not just a house, but a home",
-		"floors":"7",
-		"rooms":"37",
+        "description":"conveniently cheap. Security is the only exception",
+		"floors":6,
+		"rooms":100,
 		"accessories":{
 			"wifi":"yes",
 			"pool":"no",
-			"parking":"yes"
+			"parking":"no"
 		}
     },
 	"location":{
@@ -24,6 +24,11 @@ Content-Type: application/json
 	},
     "status":"available"
 }
+
+
+########################
+# GET proeprty by Id
+GET http://localhost:4000/property/51cab755-d6a1-43fa-bdfe-1cb4870c3828
 
 
 ########################
@@ -32,13 +37,31 @@ GET http://localhost:4000/property/
 
 
 ########################
-# GET PROPERTY BY
-GET http://localhost:4000/property/filter-by/
+# GET PROPERTY BY PARAMS
+GET http://localhost:4000/property/search/
 Content-Type: application/json
 
 {
-	"id":"4134628937462",
-	"name":"Sergio",
+	"propertyType":"hostel",
+	"details":{
+		"rooms":100,
+		"accessories":{
+			"parking":"no"
+		}
+    },
+	"location":{
+		"country":"Kenya"		
+	}
+}
+
+
+########################
+# UPDATE A PROPERTY
+PATCH http://localhost:4000/property/update/51cab755-d6a1-43fa-bdfe-1cb4870c3828
+Content-Type: application/json
+
+{
+	"name":"Lazima Iwork?!",
 	"propertyType":"apartment",
 	"details":{
         "description":"not just a house, but a home",
@@ -56,41 +79,13 @@ Content-Type: application/json
 		"cityOrTown":"Nairobi",
 		"country":"Kenya"		
 	},
-    "status":"available"
-}
-
-
-########################
-# UPDATE A PROPERTY WITH A CERTAIN FILTER
-PATCH http://localhost:4000/property/update/26c3e72f-2e10-4752-8202-3ebbba651ec7
-Content-Type: application/json
-
-{
-	"name":"We wachaaaa",
-	"propertyType":"hostel",
-	"details":{
-        "description":"not good at all mahn",
-		"floors":"7",
-		"rooms":"37",
-		"accessories":{
-			"wifi":"yes",
-			"pool":"no",
-			"parking":"yes"
-		}
-    },
-	"location":{
-		"addressLine":"046",
-		"postalAddress":"0490",
-		"cityOrTown":"Nairobi",
-		"country":"Kenya"		
-	},
-	"status":"not available"
+    "status":"not available"
 }
 
 
 ####################
 # DELETE PROPERTY
-DELETE http://localhost:4000/property/delete/b037be9f-748b-49ad-9a57-b1a64e67adee
+DELETE http://localhost:4000/property/delete/51cab755-d6a1-43fa-bdfe-1cb4870c3828
 Content-Type: application/json
 
 {

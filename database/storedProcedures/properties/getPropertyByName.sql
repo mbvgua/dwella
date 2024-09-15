@@ -3,7 +3,8 @@ CREATE OR ALTER PROCEDURE getPropertyByName(
 )
 AS
 BEGIN
-SELECT * FROM properties
-WHERE name=@name AND isDeleted=0
+    SELECT * FROM properties
+    WHERE name=@name
+    AND isDeleted=0
 END;
 GO

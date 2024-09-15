@@ -1,28 +1,19 @@
 CREATE OR ALTER PROCEDURE updateProperty(
     @id VARCHAR(255),
-    @name VARCHAR(255),
-    @propertyType VARCHAR(255),
-    @description VARCHAR(255),
-    @floors VARCHAR(255),
-    @rooms VARCHAR(255),
-    @wifi VARCHAR(255),
-    @pool VARCHAR(255),
-    @parking VARCHAR(255),
-    @addressLine VARCHAR(255),
-    @postalAddress VARCHAR(255),
-    @cityOrTown VARCHAR(255),
-    @country VARCHAR(255),
-    @status VARCHAR(255)
+    @name VARCHAR(100),
+    @propertyType VARCHAR(100),
+    @detailsJson NVARCHAR(MAX),
+    @locationJson NVARCHAR(MAX),
+    @status VARCHAR(100)
 )
 AS
-BEGIN
-UPDATE properties 
-SET 
-    name=@name,
-    propertyType=@propertyType,
-    details=JSON_MODIFY(@details,'$.details',details),
-    location=JSON_MODIFY(@location,'$.location',location),
-    status=@status
-WHERE id=@id
-END;
+BEGIN TRY
+    UPDATE properties
+    SET name=@name,propertyType=@propertyType,detailsJson=@detailsJson,locationJson=@locationJson,status=@status
+    WHERE id=@id
+    PRINT 'User added successfully!'
+END TRY
+BEGIN CATCH
+    PRINT 'Error occurred:' + ERROR_MESSAGE()
+END CATCH;
 GO

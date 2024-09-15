@@ -9,8 +9,8 @@ CREATE TABLE properties(
     ownerId VARCHAR(255) NOT NULL,
     name VARCHAR(100) NOT NULL,
     propertyType VARCHAR(100) NOT NULL CHECK(propertyType IN ('apartment','commercial','hostel')),
-    details NVARCHAR(MAX) NOT NULL,
-    location NVARCHAR(MAX) NOT NULL,
+    detailsJson NVARCHAR(MAX) NOT NULL,
+    locationJson NVARCHAR(MAX) NOT NULL,
     status VARCHAR(100) CHECK (status IN ('available', 'not available')),
     createdAt DATETIME DEFAULT GETDATE(),
     isDeleted INT DEFAULT 0,
@@ -18,6 +18,6 @@ CREATE TABLE properties(
 );
 GO
 
-CREATE INDEX index_properties_name ON properties(name);
+CREATE UNIQUE INDEX index_properties_name ON properties(name);
 CREATE INDEX index_properties_status ON properties(status);
 GO

@@ -1,0 +1,113 @@
+.
+├── Changelog
+├── collections
+│   ├── auth.collections.http
+│   ├── properties.collections.http
+│   └── user.collections.http
+├── database
+│   ├── db_schema.sql
+│   ├── functions
+│   │   └── functions.sql
+│   ├── storedProcedures
+│   │   ├── maintenanceRequests
+│   │   │   ├── closeRequest.sql
+│   │   │   ├── deleteRequest.sql
+│   │   │   ├── getRequests.sql
+│   │   │   ├── getUserRequests.sql
+│   │   │   └── makeRequest.sql
+│   │   ├── payments
+│   │   │   └── makePayment.sql
+│   │   ├── properties
+│   │   │   ├── addProperty.sql
+│   │   │   ├── deleteProperty.sql
+│   │   │   ├── getProperties.sql
+│   │   │   ├── getPropertyById.sql
+│   │   │   ├── getPropertyByName.sql
+│   │   │   └── updateProperty.sql
+│   │   ├── rentalContracts
+│   │   │   ├── addContract.sql
+│   │   │   ├── deleteContract.sql
+│   │   │   ├── getCurrentTenantContract.sql
+│   │   │   └── getPreviousTenantContract.sql
+│   │   ├── reviews
+│   │   │   ├── addReview.sql
+│   │   │   ├── deleteReview.sql
+│   │   │   ├── getUserReview.sql
+│   │   │   ├── getUserReviews.sql
+│   │   │   └── updateReview.sql
+│   │   └── users
+│   │       ├── addUser.sql
+│   │       ├── changePassword.sql
+│   │       ├── deleteUser.sql
+│   │       ├── forgotPassword.sql
+│   │       ├── getUserByEmail.sql
+│   │       ├── getUserById.sql
+│   │       ├── getUserByRole.sql
+│   │       ├── getUserByUserName.sql
+│   │       ├── getUsers.sql
+│   │       └── updateUser.sql
+│   ├── tables
+│   │   ├── maintenanceRequests.sql
+│   │   ├── payments.sql
+│   │   ├── properties.sql
+│   │   ├── rentalContracts.sql
+│   │   └── users.sql
+│   ├── triggers
+│   │   └── rentalContracts
+│   │       └── triggers.sql
+│   └── views
+│       └── views.sql
+├── dist
+│   ├── api-v1
+│   │   ├── controllers
+│   │   │   ├── auth.controllers.js
+│   │   │   ├── properties.controllers.js
+│   │   │   └── users.controllers.js
+│   │   ├── helpers
+│   │   │   └── database.helpers.js
+│   │   ├── models
+│   │   │   ├── auth.models.js
+│   │   │   └── properties.models.js
+│   │   ├── routes
+│   │   │   ├── auth.routes.js
+│   │   │   ├── properties.routes.js
+│   │   │   └── user.routes.js
+│   │   └── validators
+│   │       ├── auth.validators.js
+│   │       ├── properties.validators.js
+│   │       └── property.validators.js
+│   ├── config
+│   │   └── index.js
+│   └── server.js
+├── node_modules  [190 entries exceeds filelimit, not opening dir]
+├── package.json
+├── package-lock.json
+├── readme.md
+├── README.md
+├── src
+│   ├── api-v1
+│   │   ├── controllers
+│   │   │   ├── auth.controllers.ts
+│   │   │   ├── properties.controllers.ts
+│   │   │   └── users.controllers.ts
+│   │   ├── helpers
+│   │   │   └── database.helpers.ts
+│   │   ├── middleware
+│   │   ├── models
+│   │   │   ├── auth.models.ts
+│   │   │   └── properties.models.ts
+│   │   ├── routes
+│   │   │   ├── auth.routes.ts
+│   │   │   ├── properties.routes.ts
+│   │   │   └── user.routes.ts
+│   │   └── validators
+│   │       ├── auth.validators.ts
+│   │       └── properties.validators.ts
+│   ├── config
+│   │   └── index.ts
+│   └── server.ts
+├── tree
+├── tree.txt
+└── tsconfig.json
+
+33 directories, 78 files

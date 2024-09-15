@@ -1,8 +1,11 @@
-# ignore all the node modules
+# node modules
 node_modules/
 
-# ignore the build files
+# the build files
 dist/
 
-# ignore the environmental variables
+# environmental variables
 .env
+
+# draft readme file
+readme.md
