@@ -3,3 +3,6 @@ node_modules/
 
 # ignore the build files
 dist/
+
+# ignore the environmental variables
+.env

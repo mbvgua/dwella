@@ -1,0 +1,14 @@
+#########################
+# REGISTER A NEW USER
+POST http://localhost:4000/auth/register
+Content-Type: application/json
+
+{
+    "firstName": "Lancelot",
+    "lastName": "Munene",
+    "userName": "lance",
+    "email": "lancelot@gmail.com",
+    "contactNumber": "074-550-1059",
+    "password": "Shanara17!",
+    "role": "owner"
+}
