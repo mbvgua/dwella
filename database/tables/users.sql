@@ -20,6 +20,6 @@ GO
 
 -- nonclustered index on email, role, username
 CREATE UNIQUE INDEX index_users_email ON users(email);
-CREATE INDEX index_users_username ON users(userName);
+CREATE UNIQUE INDEX index_users_username ON users(userName);
 CREATE INDEX index_users_role ON users(role);
 GO

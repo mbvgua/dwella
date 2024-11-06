@@ -6,12 +6,16 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:build": "tsc -w",
-    "start:run": "nodemon dist/index.js",
+    "start:run": "nodemon dist/server.js",
     "start": "concurrently npm:start:*"
+  },
+  "repository":{
+    "type":"git",
+    "url":"https://github.com/dwella-org/backend.git"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "GPL-3.0-or-later",
   "dependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/concurrently": "^7.0.0",

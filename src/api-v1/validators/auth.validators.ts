@@ -22,9 +22,10 @@ export const registerSchema = Joi.object({
         'string.max':'Username should have a minimum length of {#length} characters',
         'any.required':'Username is required'
     }),
-    email: Joi.string().required().email().messages({
+    email: Joi.string().required().email({minDomainSegments:2,tlds:{allow:['com','net']}}).messages({
         'string.base':'Email should be of type text',
         'string.empty':'Email is required',
+        'string.email':'email can only have two domains, e.g example.com whose tlds can either be ".com" or ".net"',
         'any.required':'Email is required'
     }),
     contactNumber: Joi.string().required().min(10).messages({
@@ -48,5 +49,44 @@ export const registerSchema = Joi.object({
         'string.base': 'Role should be of type text',
         'any.required': 'Role is required',
         'any.only': 'Role can either be maintenance, manager,tenant or owner' 
+    })
+})
+
+export const emailLoginSchema = Joi.object({
+    emailOrUserName: Joi.string().required().email({minDomainSegments:2,tlds:{allow:['com','net']}}).messages({
+        'string.base':'Email should be of type text',
+        'string.empty':'Email is required',
+        'string.email':'email can only have two domains, e.g example.com whose tlds can either be ".com" or ".net"',
+        'any.required':'Email is required'
+    }),
+    password: Joi.string().required().pattern(
+        new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,10}$')
+    ).messages({
+        'string.base':'Password should be of type text',
+        'string.empty':'Password is required',
+        'string.min':'Password should have a minimum length of {#length} characters',
+        'string.max':'Password should have a maximum length of {#length} characters',
+        'any.required':'Password is required',
+        'string.pattern.base':'Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character'
+    })
+})
+
+export const usernameLoginSchema = Joi.object({
+    emailOrUserName: Joi.string().required().min(1).max(20).messages({
+        'string.base':'Username should be of type text',
+        'string.empty':'Username is required',
+        'string.min':'Username should have a minimum length of {#length} characters',
+        'string.max':'Username should have a minimum length of {#length} characters',
+        'any.required':'Username is required'
+    }),
+    password: Joi.string().required().pattern(
+        new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,10}$')
+    ).messages({
+        'string.base':'Password should be of type text',
+        'string.empty':'Password is required',
+        'string.min':'Password should have a minimum length of {#length} characters',
+        'string.max':'Password should have a maximum length of {#length} characters',
+        'any.required':'Password is required',
+        'string.pattern.base':'Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character'
     })
 })

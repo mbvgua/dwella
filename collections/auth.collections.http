@@ -4,11 +4,21 @@ POST http://localhost:4000/auth/register
 Content-Type: application/json
 
 {
-    "firstName": "Lancelot",
-    "lastName": "Munene",
-    "userName": "lance",
-    "email": "lancelot@gmail.com",
+    "firstName": "Sir",
+    "lastName": "Arthur",
+    "userName": "arthur",
+    "email": "arthur@yahoo.com",
     "contactNumber": "074-550-1059",
     "password": "Shanara17!",
-    "role": "owner"
+    "role": "tenant"
+}
+
+########################
+# LOGIN EXISTING USER
+POST http://localhost:4000/auth/login
+Content-Type: application/json
+
+{
+    "emailOrUserName": "arthur",
+    "password": "Shanara17!"
 }

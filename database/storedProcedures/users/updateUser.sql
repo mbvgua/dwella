@@ -9,7 +9,7 @@ CREATE OR ALTER PROCEDURE updateUser(
 )
 AS
 BEGIN
-UPDATE users SET (firstName=@firstName,lastName=@lastName,userName=@userName,email=ENCRYPTBYPASSPHRASE('theNorthRemembers',@email),contactNumber=@contactNumber,password=@password,role=@role)
+UPDATE users SET firstName=@firstName,lastName=@lastName,userName=@userName,email=@email,contactNumber=@contactNumber,password=@password,role=@role
 WHERE id=@id
 END;
 GO

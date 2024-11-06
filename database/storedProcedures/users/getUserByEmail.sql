@@ -4,6 +4,6 @@ CREATE OR ALTER PROCEDURE getUserByEmail(
 AS
 BEGIN
 SELECT * FROM users
-WHERE email=DECRYPTBYPASSPHRASE('theNorthRemembers',@email) AND isDeleted=0
+WHERE email=@email AND isDeleted=0
 END;
 GO

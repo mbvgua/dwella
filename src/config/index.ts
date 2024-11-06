@@ -3,7 +3,9 @@ import path from 'path'
 
 
 // configure the path to the environmental variables
-dotenv.config({ path:path.resolve(__dirname, '../../.env') })
+dotenv.config()
+// why were we doing this yet the above also works?
+// dotenv.config({ path:path.resolve(__dirname, '../../.env') })
 
 // connecting the the sql-server
 export const sqlConfig = {

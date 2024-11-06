@@ -1,9 +1,10 @@
 import {Request, Response} from 'express'
 import bcrypt from 'bcrypt'
 import {v4 as uid} from 'uuid'
-import { UserRoles } from '../models/auth.models'
-import { registerSchema } from '../validators/auth.validators'
+import { User, UserRoles } from '../models/auth.models'
+import { emailLoginSchema, registerSchema, usernameLoginSchema } from '../validators/auth.validators'
 import { DbHelper } from '../databaseHelpers/index.helpers'
+import { error } from 'console'
 
 
 // instantiate the database helpers
@@ -21,6 +22,7 @@ export async function registerUser (request:Request, response:Response){
     */
 
     const id=uid()
+    // const role = UserRoles.Admin
     const {firstName, lastName,userName,email,contactNumber,password,role} = request.body
     const {error} = registerSchema.validate(request.body)
     try {
@@ -45,3 +47,66 @@ export async function registerUser (request:Request, response:Response){
         return response.status(400).send(error)
     }
 }
+
+export async function loginUser(request:Request, response:Response){
+	/* this function aims to login existing users into the system
+    * it requires the username or email and the respective users password
+    * if exists, user is logged in
+    * otherwise, a response is sent to the user to create a new account
+    */
+
+    const {emailOrUserName, password} = request.body
+    const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/
+
+    // if emailOrUserName pattern matches an email
+    try {
+        if (emailRegex.test(emailOrUserName)){
+            const {error} = emailLoginSchema.validate(request.body)
+            if (error) {
+                return response.status(400).send(error.message)
+            } else {
+                const user = (await db.exec('getUserByEmail',
+                    {email:emailOrUserName})).recordset as Array<User>
+                
+                const isValidUser = await bcrypt.compare(password,user[0].password)
+                if (isValidUser){
+                    return response.status(200).send({message:'Welcome back [name]'})
+                } else {
+                    return response.status(400).send({message:'Oops! Seems like you entered an invalid password. Try again?'})
+                }
+            }
+        // else if email regex doesnt match pattern i.e is a username
+        } else if (!emailRegex.test(emailOrUserName)){
+            const {error} = usernameLoginSchema.validate(request.body)
+            if (error) {
+                return response.status(400).send(error.message)
+            } else {
+                const user = (await db.exec('getUserByUserName',
+                    {userName:emailOrUserName})).recordset as Array<User>
+
+                const isValidUser = await bcrypt.compare(password, user[0].password)
+                if (isValidUser){
+                    console.log('inakwama after kuingia part 2')
+
+                    return response.status(200).send({message:'Welcome back [name]'})
+                } else {
+                    return response.status(400).send({message:'Oops! Seems like you entered an incorrect password. Try again?'})
+                }
+            }
+        }
+
+    } catch(error){
+        return response.status(400).send({message:'Oh no! It seems like the email/username you entered does not exist. Try again?'})
+    }
+
+}
+
+
+// change password
+// forgot password
+// update user info
+// delete user acc
+
+// Admin roles
+// get users by id
+// get users by email

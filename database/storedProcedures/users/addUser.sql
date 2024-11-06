@@ -13,6 +13,6 @@ AS
 BEGIN
 -- inser statement for procedure here
 INSERT INTO users(id,firstName,lastName,userName,email,contactNumber,password,role)
-VALUES (@id,@firstName,@lastName,@userName,ENCRYPTBYPASSPHRASE('theNorthRemembers',@email),@contactNumber,@password,@role)
+VALUES (@id,@firstName,@lastName,@userName,@email,@contactNumber,@password,@role)
 END;
 GO
