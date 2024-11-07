@@ -2,8 +2,8 @@ import {Request, Response} from 'express'
 import bcrypt from 'bcrypt'
 import {v4 as uid} from 'uuid'
 import { User, UserRoles } from '../models/auth.models'
-import { changePasswordSchema, emailForgotPassword, emailLoginSchema, registerSchema, userNameForgotPassword, usernameLoginSchema } from '../validators/auth.validators'
-import { DbHelper } from '../databaseHelpers/index.helpers'
+import { changePasswordSchema, emailForgotPassword, emailLoginSchema, registerSchema, updateUserSchema, userNameForgotPassword, usernameLoginSchema } from '../validators/auth.validators'
+import { DbHelper } from '../helpers/database.helpers'
 
 
 // instantiate the database helpers
@@ -43,7 +43,7 @@ export async function registerUser (request:Request, response:Response){
             return response.status(200).send({message:'Congratulations! You have successfully created a new account'})
         }
     } catch(error){
-        return response.status(400).send(error)
+        return response.status(500).send(error)
     }
 }
 
@@ -94,7 +94,7 @@ export async function loginUser(request:Request, response:Response){
         }
 
     } catch(error){
-        return response.status(400).send({message:'Oh no! It seems like the email/username you entered does not exist. Try again?'})
+        return response.status(500).send({message:'Oh no! It seems like the email/username you entered does not exist. Try again?'})
     }
 
 }
@@ -128,8 +128,7 @@ export async function forgotPassword(request:Request, response:Response){
                     await db.exec('forgotPassword',{
                         id:user[0].id
                     })
-                    return response.status(200).send({message:`Hey ${user[0].userName}! We have sent an email
-                    to your account ${user[0].email}. Click on the link contained to change your password.`})
+                    return response.status(200).send({message:`Hey ${user[0].userName}! We have sent an email to your account ${user[0].email}. Click on the link contained to change your password.`})
                 } else {
                     return response.status(400).send({message:'Oops! It looks like there is no existing user with that email. Try again?'})
                 }
@@ -149,8 +148,7 @@ export async function forgotPassword(request:Request, response:Response){
                     await db.exec('forgotPassword',{
                         id:user[0].id   //need backgroung process to return values to 0
                     })
-                    return response.status(400).send({message:`Hey ${user[0].userName}! We have sent an email
-                        to your account ${user[0].email}. Click on the link contained to change your password.`})
+                    return response.status(400).send({message:`Hey ${user[0].userName}! We have sent an email to your account ${user[0].email}. Click on the link contained to change your password.`})
                 } else {
                     return response.status(400).send({message:'Oops! Looks like there is no existing user with that username. Try again?'})
                 }
@@ -158,19 +156,20 @@ export async function forgotPassword(request:Request, response:Response){
         }
 
     } catch (error){
-        return response.status(400).send({message:'Oh no! Looks like the email/username you entered do not exist. Create an account instead?'})
+        return response.status(500).send({message:'Oh no! Looks like the email/username you entered do not exist. Create an account instead?'})
     }
 }
 
 // change password ->within the app 
-export async function changePassword(request:Request, response:Response){
+export async function changePassword(request:Request<{id:string}>, response:Response){
     /*
      * for changing passwords within the application
      * also where the forgot password redirects you to
      * you enter and confirm the new password and it is updated on the db 
      */
 
-    const {email, newPassword, confirmNewPassword} = request.body
+    const id = request.params.id
+    const {newPassword, confirmNewPassword} = request.body
     const {error} = changePasswordSchema.validate(request.body)
     try {
         if (error){
@@ -178,25 +177,83 @@ export async function changePassword(request:Request, response:Response){
         } else {
             const hashedPassword = await bcrypt.hash(confirmNewPassword,9)
             
-            const user = (await db.exec('getUserByEmail',{
-                email
+            const user = (await db.exec('getUserById',{
+                id
             })).recordset as Array<User>
     
             await db.exec('changePassword', {
-                id:user[0].id,  //get a way to retrieve this from tokens and not manual input
+                id,
                 password:hashedPassword
             })
-            return response.status(200).send({message:`Congratulations ${user[0].userName}.
-                You have successfully changed your password. Login in again to continue activity.`})
+            return response.status(200).send({message:`Congratulations ${user[0].userName}. You have successfully changed your password. Login in again to continue activity.`})
         }
     } catch(error) {
-        return response.status(400).send(error)
+        return response.status(500).send({message:'Oh no! It looks like you do not have an account. Create one instead?'})
     }
 }
 
 // update user info
-// delete user acc
+export async function updateUser(request:Request<{id:string}>, response:Response){
+    /*
+     * This function will update the users account details 
+     * You cannot update the role or password via this 
+     */
 
-// Admin roles
-// get users by id
-// get users by email
+    const id = request.params.id
+    const {firstName,lastName,userName,email,contactNumber} = request.body
+    const {error} = updateUserSchema.validate(request.body)
+
+    try{
+        if(error){
+            return response.status(400).send(error.message)
+        } else {
+            const user = (await db.exec('getUserById', {
+                id
+            })).recordset as Array<User>
+
+            await db.exec('updateUser',{
+                id,
+                firstName,
+                lastName,
+                userName,
+                email,
+                contactNumber
+            })
+
+            return response.status(200).send({message:`Congratulations ${user[0].userName}! You're details have been updated successfully.`})
+        }
+    } catch(error) {
+        return response.status(500).send({message:'Oh no! It looks like you do not have an account. Create one instead?'})
+    }
+}
+
+// delete user account
+export async function deleteUser(request:Request<{id:string}>, response:Response){
+    /*
+     * This function will SOFT delete the user's account
+     * It requires only an id 
+     */
+
+    const id = request.params.id
+    try {
+        const user = (await db.exec('getUserById', {
+            id
+        })).recordset as Array<User>
+        
+        if (user) {
+            await db.exec('deleteUser', {
+                id
+            })
+            return response.status(200).send({message:`You have successfully deleted your account. Goodbye!`})
+        } else {
+            return response.status(400).send({message:'Oh no! It looks like you do not have an account. Create one instead?'})
+        }
+    } catch(error){
+        return response.status(500).send(error)
+    }
+}
+
+// ADMIN ROLES. NEEDS TOKENS TO ACCESS
+// get user by id/email/username
+// get users by roles
+// get users 

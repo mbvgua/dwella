@@ -1,4 +1,4 @@
-import Joi, { string } from 'joi'
+import Joi from 'joi'
 
 export const registerSchema = Joi.object({
     firstName: Joi.string().required().min(3).max(50).messages({
@@ -111,12 +111,6 @@ export const userNameForgotPassword = Joi.object({
 })
 
 export const changePasswordSchema = Joi.object({
-    email: Joi.string().required().email({minDomainSegments:2,tlds:{allow:['com','net']}}).messages({
-        'string.base':'Email should be of type text',
-        'string.empty':'Email is required',
-        'string.email':'email can only have two domains, e.g example.com whose tlds can either be ".com" or ".net"',
-        'any.required':'Email is required'
-    }),
     newPassword: Joi.string().required().pattern(
         new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,10}$')
     ).messages({
@@ -128,4 +122,41 @@ export const changePasswordSchema = Joi.object({
         'string.pattern.base':'The new password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character'
     }),
     confirmNewPassword: Joi.ref('newPassword'),
+})
+
+export const updateUserSchema = Joi.object({
+    firstName: Joi.string().required().min(3).max(50).messages({
+        'string.base':'First Name should be of type text',
+        'string.empty':'First Name is required',
+        'string.min':'First Name should have a minimum length of {#length} characters',
+        'string.max':'First Name should have a minimum length of {#length} characters',
+        'any.required':'First Name is required'
+    }),
+    lastName: Joi.string().required().min(3).max(50).messages({
+        'string.base':'Last Name should be of type text',
+        'string.empty':'Last Name is required',
+        'string.min':'Last Name should have a minimum length of {#length} characters',
+        'string.max':'Last Name should have a minimum length of {#length} characters',
+        'any.required':'Last Name is required'
+    }),
+    userName: Joi.string().required().min(1).max(20).messages({
+        'string.base':'Username should be of type text',
+        'string.empty':'Username is required',
+        'string.min':'Username should have a minimum length of {#length} characters',
+        'string.max':'Username should have a minimum length of {#length} characters',
+        'any.required':'Username is required'
+    }),
+    email: Joi.string().required().email({minDomainSegments:2,tlds:{allow:['com','net']}}).messages({
+        'string.base':'Email should be of type text',
+        'string.empty':'Email is required',
+        'string.email':'email can only have two domains, e.g example.com whose tlds can either be ".com" or ".net"',
+        'any.required':'Email is required'
+    }),
+    contactNumber: Joi.string().required().min(10).messages({
+        'string.base':'Contact Number should be of type number',
+        'string.empty':'Contact Number is required',
+        'string.min':'Contact Number should have a minimum length of {#length} characters',
+        'string.max':'Contact Number should have a maximum length of {#length} characters',
+        'any.required':'Contact number is required'
+    }),
 })

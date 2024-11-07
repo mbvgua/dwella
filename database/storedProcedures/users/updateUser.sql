@@ -4,12 +4,11 @@ CREATE OR ALTER PROCEDURE updateUser(
     @lastName VARCHAR(100),
     @userName VARCHAR(100),
     @email VARCHAR(100),
-    @contactNumber VARCHAR(15),
-    @password VARCHAR(100)
+    @contactNumber VARCHAR(15)
 )
 AS
 BEGIN
-UPDATE users SET firstName=@firstName,lastName=@lastName,userName=@userName,email=@email,contactNumber=@contactNumber,password=@password,role=@role
+UPDATE users SET firstName=@firstName,lastName=@lastName,userName=@userName,email=@email,contactNumber=@contactNumber
 WHERE id=@id
 END;
 GO

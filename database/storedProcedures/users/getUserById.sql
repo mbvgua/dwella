@@ -4,6 +4,6 @@ CREATE OR ALTER PROCEDURE getUserById(
 AS
 BEGIN
 SELECT * FROM users
-WHERE id=@id AND isDeleted=1
+WHERE id=@id AND isDeleted=0
 END;
 GO
