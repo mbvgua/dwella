@@ -14,7 +14,8 @@ CREATE TABLE users(
     password VARCHAR(255) NOT NULL,
     role VARCHAR(50) NOT NULL CHECK(role IN ('maintenance','manager','tenant','owner','admin')),
     isDeleted INT DEFAULT 0,
-    -- isEmailSent INT DEFAULT 0,
+    forgotPassword INT DEFAULT 0,
+    isEmailSent INT DEFAULT 0,
 );
 GO
 
