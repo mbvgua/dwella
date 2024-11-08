@@ -232,14 +232,16 @@ export async function deleteUser(request:Request<{id:string}>, response:Response
     /*
      * This function will SOFT delete the user's account
      * It requires only an id 
+     * MUST use recordset[0], else it will return an empty array that still evaluates
+     * to true. such that even a deleted acc can still be deleted infinitely
      */
 
     const id = request.params.id
     try {
         const user = (await db.exec('getUserById', {
             id
-        })).recordset as Array<User>
-        
+        })).recordset[0] as User
+
         if (user) {
             await db.exec('deleteUser', {
                 id
