@@ -1,0 +1,42 @@
+######################
+# UPDATE USER DETAILS
+PATCH http://localhost:4000/user/update/917b6e63-3ed4-4b42-9d67-e16216039c74
+Content-Type: application/json
+
+{
+    "firstName": "Minimus",
+    "lastName": "Lancelot",
+    "userName": "mini",
+    "email": "lance@gmail.com",
+    "contactNumber": "073-550-1059"
+}
+
+
+######################
+# GET USERS BY EMAIL OR USERNAME 
+GET http://localhost:4000/user/mail-or-name
+Content-Type: application/json
+
+{
+    "emailOrUserName": "bri@gmail.com"
+}
+
+
+######################
+# GET USERS
+GET http://localhost:4000/user/
+
+
+######################
+# GET USERS BY ROLE 
+GET http://localhost:4000/user/role/
+Content-Type: application/json
+
+{
+    "role":"tenant"
+}
+
+
+######################
+# GET USER BY ID
+GET http://localhost:4000/user/b3b4500b-fc78-4237-9696-cf67ba22d8d0

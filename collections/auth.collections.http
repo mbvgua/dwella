@@ -1,0 +1,49 @@
+#########################
+# REGISTER A NEW USER
+POST http://localhost:4000/auth/register
+Content-Type: application/json
+
+{
+    "firstName": "Briana",
+    "lastName": "Mogendi",
+    "userName": "bri",
+    "email": "bri@gmail.com",
+    "contactNumber": "077-590-1009",
+    "password": "Shanara17!",
+    "role": "tenant"
+}
+
+########################
+# LOGIN EXISTING USER
+POST http://localhost:4000/auth/login
+Content-Type: application/json
+
+{
+    "emailOrUserName": "maxi24@gmail.com",
+    "password": "Shanara17!"
+}
+
+######################
+# FORGOT PASSWORD
+POST http://localhost:4000/auth/forgot-password
+Content-Type: application/json
+
+{
+    "emailOrUserName": "max"
+}
+
+#####################
+# CHANGE PASSWORD
+POST http://localhost:4000/auth/change-password/917b6e63-3ed4-4b42-9d67-e16216039c74
+Content-Type: application/json
+
+{
+    "newPassword": "Shanara17!",
+    "confirmNewPassword": "Shanara17!"
+}
+
+
+######################
+# DELETE USER
+DELETE http://localhost:4000/auth/delete/917b6e63-3ed4-4b42-9d67-e16216039c74
+
