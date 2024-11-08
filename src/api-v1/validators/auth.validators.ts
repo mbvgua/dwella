@@ -91,7 +91,7 @@ export const usernameLoginSchema = Joi.object({
     })
 })
 
-export const emailForgotPassword = Joi.object({
+export const emailOrSchema = Joi.object({
     emailOrUserName: Joi.string().required().email({minDomainSegments:2,tlds:{allow:['com','net']}}).messages({
         'string.base':'Email should be of type text',
         'string.empty':'Email is required',
@@ -100,7 +100,7 @@ export const emailForgotPassword = Joi.object({
     })
 })
 
-export const userNameForgotPassword = Joi.object({
+export const userNameOrSchema = Joi.object({
     emailOrUserName: Joi.string().required().min(1).max(20).messages({
         'string.base':'Username should be of type text',
         'string.empty': 'Username is required',
@@ -159,4 +159,12 @@ export const updateUserSchema = Joi.object({
         'string.max':'Contact Number should have a maximum length of {#length} characters',
         'any.required':'Contact number is required'
     }),
+})
+
+export const roleSchema = Joi.object({
+    role: Joi.string().required().valid('maintenance','manager','tenant','owner').messages({
+        'string.base': 'Role should be of type text',
+        'any.required': 'Role is required',
+        'any.only': 'Role can either be maintenance, manager,tenant or owner' 
+    })
 })

@@ -4,13 +4,13 @@ POST http://localhost:4000/auth/register
 Content-Type: application/json
 
 {
-    "firstName": "Maximus",
-    "lastName": "Ochola",
-    "userName": "max",
-    "email": "maxi24@gmail.com",
-    "contactNumber": "073-550-1059",
+    "firstName": "Briana",
+    "lastName": "Mogendi",
+    "userName": "bri",
+    "email": "bri@gmail.com",
+    "contactNumber": "077-590-1009",
     "password": "Shanara17!",
-    "role": "owner"
+    "role": "tenant"
 }
 
 ########################
@@ -59,5 +59,32 @@ Content-Type: application/json
 # DELETE USER
 DELETE http://localhost:4000/auth/delete/917b6e63-3ed4-4b42-9d67-e16216039c74
 
-######################
 
+######################
+# GET USER BY ID
+GET http://localhost:4000/auth/search/b3b4500b-fc78-4237-9696-cf67ba22d8d0
+
+
+######################
+# GET USERS
+GET http://localhost:4000/auth/
+
+
+######################
+# GET USERS BY ROLE 
+GET http://localhost:4000/auth/search/role/
+Content-Type: application/json
+
+{
+    "role":"tenant"
+}
+
+
+######################
+# GET USERS BY EMAIL OR USERNAME 
+GET http://localhost:4000/auth/search/mail-or-name
+Content-Type: application/json
+
+{
+    "emailOrUserName": "bri@gmail.com"
+}
