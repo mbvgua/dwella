@@ -1,0 +1,27 @@
+###############
+# ADD A NEW PROPERTY
+POST http://localhost:4000/property/add/b3b4500b-fc78-4237-9696-cf67ba22d8d0
+Content-Type: application/json
+
+{
+	"name":"Venus Glorious Gardens",
+	"propertyType":"hostel",
+	"details":{
+        "description":"a beautiful house. You should come and see it",
+		"floors":5,
+		"rooms":9,
+		"accessories":{
+			"wifi":"yes",
+			"pool":"yes",
+			"parking":"yes"
+		}
+    },
+	"location":{
+		"addressLine":"00503",
+		"postalAddress":"014",
+		"cityOrTown":"Nairobi",
+		"country":"Kenya"		
+	},
+    "status":"available"
+}
+

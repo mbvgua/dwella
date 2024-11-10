@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { changePassword, deleteUser, forgotPassword, getUserByEmailOrUserName, getUserById, getUserByRole, getUsers, loginUser, registerUser, updateUser } from '../controllers/auth.controllers'
+import { changePassword, deleteUser, forgotPassword, loginUser, registerUser } from '../controllers/auth.controllers'
 
 // instantiate the Router
 const authRouter=Router()
