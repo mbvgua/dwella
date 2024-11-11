@@ -3,9 +3,7 @@ import { v4 as uid } from 'uuid'
 import { DbHelper } from '../helpers/database.helpers'
 import { addPropertySchema } from '../validators/properties.validators'
 import { User } from '../models/auth.models'
-
-import mssql from 'mssql'
-import { sqlConfig } from '../../config'
+import { Property } from '../models/properties.models'
 
 
 const db = new DbHelper()	// instantiate the database
@@ -22,51 +20,27 @@ export async function addProperty(request:Request<{id:string}>, response:Respons
 	const userId = request.params.id
 	const { name,propertyType,details,location,status } = request.body
 
+	// convert the nested elements to JSON
+	const detailsJson = JSON.stringify(details)
+	const locationJson = JSON.stringify(location)
+
 	try {
 		const {error} = addPropertySchema.validate(request.body)
 		if(error){
 			return response.status(400).send(error.message)		
 		} else {
 			const user = (await db.exec('getUserById', { id:userId })).recordset[0] as User
-			if(user.role === 'owner' || user.role === 'admin'){
-				// stored procedure didnt work
-				// await db.exec('addProperty', {
-				// 	id,
-				// 	ownerId:userId,
-				// 	name:name.toLowerCase(),
-				// 	propertyType,
-				// 	details,
-				// 	location,
-				// 	status
-				// })
 
-				// , let me try with a normal query
-				const pool = await mssql.connect(sqlConfig)
-				await pool.request()
-				.input('id',id)
-				.input('ownerId',userId)
-				.input('name',name)
-				.input('propertyType',propertyType)
-				.input('details',{
-					"description":details.description,
-					"floors":details.floors,
-					"rooms":details.rooms,
-					"accessories":{
-						"wifi":details.accessories.wifi,
-						"pool":details.accessories.pool,
-						"parking":details.accessories.parking
-					}			
+			if(user.role === 'owner' || user.role === 'admin'){
+				await db.exec('addProperty', {
+					id,
+					ownerId:userId,
+					name:name,
+					propertyType,
+					details:detailsJson,
+					location:locationJson,
+					status
 				})
-				.input('location',{
-					"addressLine":location.addressLine,
-					"postalAddress":location.postalAddress,
-					"cityOrTown":location.cityOrTown,
-					"country":location.country					
-				})
-				.input('status',status)
-				.execute('addProperty')
-				// .query(`INSERT INTO properties VALUES 
-				// 	(id,userId,name,propertyType,details,location,status,2022-03-11,0)`)
 
 				return response.status(200).send({message:`Congratulations ${user.userName}! You have succesfully added ${name} to the application`})
 			} else {
@@ -78,7 +52,9 @@ export async function addProperty(request:Request<{id:string}>, response:Respons
 	}
 }	
 
-// update existing property
-// get property by value {id,county,accessories,propertyType e.t.c}
 // get properties
+
+
+// get property by value {id,county,accessories,propertyType e.t.c}
+// update existing property
 // delete property

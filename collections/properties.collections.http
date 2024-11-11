@@ -1,24 +1,24 @@
 ###############
 # ADD A NEW PROPERTY
-POST http://localhost:4000/property/add/b3b4500b-fc78-4237-9696-cf67ba22d8d0
+POST http://localhost:4000/property/add/e0380cc0-f311-4b83-a537-4910808e60f2
 Content-Type: application/json
 
 {
-	"name":"Venus Glorious Gardens",
-	"propertyType":"hostel",
+	"name":"St.Joseph Apartments",
+	"propertyType":"apartment",
 	"details":{
-        "description":"a beautiful house. You should come and see it",
-		"floors":5,
-		"rooms":9,
+        "description":"not just a house, but a home",
+		"floors":"7",
+		"rooms":"37",
 		"accessories":{
 			"wifi":"yes",
-			"pool":"yes",
+			"pool":"no",
 			"parking":"yes"
 		}
     },
 	"location":{
-		"addressLine":"00503",
-		"postalAddress":"014",
+		"addressLine":"046",
+		"postalAddress":"0490",
 		"cityOrTown":"Nairobi",
 		"country":"Kenya"		
 	},
