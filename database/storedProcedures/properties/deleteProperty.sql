@@ -1,5 +1,5 @@
 CREATE OR ALTER PROCEDURE deleteProperty(
-    @id INT
+    @id VARCHAR(255)
 )
 AS
 BEGIN

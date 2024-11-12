@@ -4,7 +4,7 @@ POST http://localhost:4000/property/add/e0380cc0-f311-4b83-a537-4910808e60f2
 Content-Type: application/json
 
 {
-	"name":"St.Joseph Apartments",
+	"name":"Sergio",
 	"propertyType":"apartment",
 	"details":{
         "description":"not just a house, but a home",
@@ -25,3 +25,45 @@ Content-Type: application/json
     "status":"available"
 }
 
+
+########################
+# GET ALL PROPERTIES
+GET http://localhost:4000/property/
+
+
+########################
+# UPDATE A PROPERTY WITH A CERTAIN FILTER
+PATCH http://localhost:4000/property/update/d26d13bb-2eb2-407d-b173-cdb2e2b5b9bc
+Content-Type: application/json
+
+{
+	"name":"We wacha",
+	"propertyType":"hostel",
+	"details":{
+        "description":"not good at all mahn",
+		"floors":"7",
+		"rooms":"37",
+		"accessories":{
+			"wifi":"yes",
+			"pool":"no",
+			"parking":"yes"
+		}
+    },
+	"location":{
+		"addressLine":"046",
+		"postalAddress":"0490",
+		"cityOrTown":"Nairobi",
+		"country":"Kenya"		
+	},
+	"status":"not available"
+}
+
+
+####################
+# DELETE PROPERTY
+DELETE http://localhost:4000/property/delete/b037be9f-748b-49ad-9a57-b1a64e67adee
+Content-Type: application/json
+
+{
+	"userId":"b3b4500b-fc78-4237-9696-cf67ba22d8d0"
+}

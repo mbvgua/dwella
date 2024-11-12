@@ -1,5 +1,5 @@
 CREATE OR ALTER PROCEDURE getPropertyById(
-    @id INT
+    @id VARCHAR(255)
 )
 AS
 BEGIN
