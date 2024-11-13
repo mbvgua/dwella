@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { v4 as uid } from 'uuid'
 import { DbHelper } from '../helpers/database.helpers'
-import { addPropertySchema, deletePropertySchema, updatePropertySchema } from '../validators/properties.validators'
+import { addPropertySchema, deletePropertySchema, getPropertySchema, updatePropertySchema } from '../validators/properties.validators'
 import { User } from '../models/auth.models'
 import { Property } from '../models/properties.models'
 
@@ -63,14 +63,22 @@ export async function getProperties(request:Request, response:Response){
 		if (properties.length == 0) {
 			return response.status(400).send({error:'There are currently no properties in the system. Begin adding some?'})
 		} else {
-			return response.status(200).send(properties)
+			return response.status(200).send({properties:properties})
 		}
 	} catch(error){
 		return response.status(500).send(error)
 	}
 }
 
-// get property by value
+// get property by value//
+export async function getPropertyBy(request:Request, response:Response){
+	/*
+	 * this function will return a property based on a certain filter 
+	 * this might be {getById,getByLocation,getBystatus,getByPropertyType,getByDetails} 
+	 */
+
+
+}
 
 
 // update existing property
@@ -84,11 +92,11 @@ export async function updateProperty(request:Request<{id:string}>, response:Resp
 	 */
 
 	const propertyId = request.params.id
-	const { name,propertyType,details,location,status } = request.body
+	const {name,propertyType,status,details,location} = request.body
 
-	// convert the nested elements to JSON
-	const detailsJson = JSON.stringify(details)
-	const locationJson = JSON.stringify(location)
+	const detailsJSON = JSON.stringify(details)
+	const locationJSON = JSON.stringify(location)
+
 	
 	try {
 		const {error} = updatePropertySchema.validate(request.body)
@@ -99,11 +107,21 @@ export async function updateProperty(request:Request<{id:string}>, response:Resp
 			if (property){
 				await db.exec('updateProperty',{
 					id:propertyId,
-					name:name,
-					propertyType:propertyType,
-					details:detailsJson,
-					location:locationJson,
-					status: status
+					name,
+					propertyType,
+					location:locationJSON,
+					details:detailsJSON,
+					// description,
+					// floors,
+					// rooms,
+					// wifi,
+					// pool,
+					// parking,
+					// addressLine,
+					// postalAddress,
+					// cityOrTown,
+					// country,
+					status
 				})
 				return response.status(200).send({message:`Congratulations! ${property.name} has successfully been updated.`})
 			} else {

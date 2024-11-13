@@ -1,10 +1,11 @@
 import { Router } from 'express'
-import { addProperty, getProperties, deleteProperty, updateProperty } from '../controllers/properties.controllers'
+import { addProperty, deleteProperty, getProperties, getPropertyBy, updateProperty } from '../controllers/properties.controllers'
 
 const propertyRouter = Router()
 
 propertyRouter.post('/add/:id', addProperty)
 propertyRouter.get('',getProperties)
+propertyRouter.get('/filter-by/',getPropertyBy)
 propertyRouter.patch('/update/:id/',updateProperty)
 propertyRouter.delete('/delete/:id/',deleteProperty)
 
