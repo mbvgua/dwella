@@ -1,0 +1,93 @@
+###############
+# ADD A NEW PROPERTY
+POST http://localhost:4000/property/add/e0380cc0-f311-4b83-a537-4910808e60f2
+Content-Type: application/json
+
+{
+	"name":"Takimu",
+	"propertyType":"hostel",
+	"details":{
+        "description":"conveniently cheap. Security is the only exception",
+		"floors":6,
+		"rooms":100,
+		"accessories":{
+			"wifi":"yes",
+			"pool":"no",
+			"parking":"no"
+		}
+    },
+	"location":{
+		"addressLine":"046",
+		"postalAddress":"0490",
+		"cityOrTown":"Nairobi",
+		"country":"Kenya"		
+	},
+    "status":"available"
+}
+
+
+########################
+# GET proeprty by Id
+GET http://localhost:4000/property/51cab755-d6a1-43fa-bdfe-1cb4870c3828
+
+
+########################
+# GET ALL PROPERTIES
+GET http://localhost:4000/property/
+
+
+########################
+# GET PROPERTY BY PARAMS
+GET http://localhost:4000/property/search/
+Content-Type: application/json
+
+{
+	"propertyType":"hostel",
+	"details":{
+		"rooms":100,
+		"accessories":{
+			"parking":"no"
+		}
+    },
+	"location":{
+		"country":"Kenya"		
+	}
+}
+
+
+########################
+# UPDATE A PROPERTY
+PATCH http://localhost:4000/property/update/51cab755-d6a1-43fa-bdfe-1cb4870c3828
+Content-Type: application/json
+
+{
+	"name":"Lazima Iwork?!",
+	"propertyType":"apartment",
+	"details":{
+        "description":"not just a house, but a home",
+		"floors":"7",
+		"rooms":"37",
+		"accessories":{
+			"wifi":"yes",
+			"pool":"no",
+			"parking":"yes"
+		}
+    },
+	"location":{
+		"addressLine":"046",
+		"postalAddress":"0490",
+		"cityOrTown":"Nairobi",
+		"country":"Kenya"		
+	},
+    "status":"not available"
+}
+
+
+####################
+# DELETE PROPERTY
+DELETE http://localhost:4000/property/delete/51cab755-d6a1-43fa-bdfe-1cb4870c3828
+Content-Type: application/json
+
+{
+	"userId":"b3b4500b-fc78-4237-9696-cf67ba22d8d0"
+}

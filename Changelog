@@ -1,0 +1,209 @@
+commit 3ce51a4799bdc7d4dcd76d88d1f38336f6a9a4df
+Author: mbvgua <mbuguadouglas17@gmail.com>
+Date:   Wed Nov 13 14:47:39 2024 +0300
+
+    ERROR ON UPDATEPROPERTY CONTROLLER
+    
+    While building the getPropertyBy controller, I realized some bugs in the
+    updateProperty Controller:
+    -  While updating the property, more and more escape characters were being added to the values within the databse. Most likely dues to the JSON.stringify() function within the controller.
+    - In trying to eliminate this abnormally by using the JSON_QUERY() function to properly format JSON, it seemed to append itself on the existing values. Removing the escape characters error and adding a new one.
+    - This has lead me to rethink on the neccessity of using JSON schema
+      within my database overall.
+    
+    For the getPropertyBy controller, I need to research on usage of utils
+    in Node.Js projects. With this understanding, I intend to build a simple
+    utils to identify the search parameters being passed.
+    
+    An alternative mastering the use of search parameters. When a user
+    selects those, they are passed to the specified url using the next()
+    function and so on....
+
+commit aa9997f33f5cb0ad2f5ec83970fa3a719df5f2d2
+Author: mbvgua <mbuguadouglas17@gmail.com>
+Date:   Tue Nov 12 19:32:38 2024 +0300
+
+    Continue on the property Module
+    
+    continue work on the property module:
+    - built and integated the deleteUser, getProperties, deleteProperty,
+      updateProperty controllers
+    - Faced some major issue while working on the updateProperty module,
+      since like the addProperty controller, it involves nested JSON data. I resolved this using JSON_MODIFY() built-in function in MsSQL. A by-product of this is that it now requires one to have all values in the request being sent to the server.
+    - I intend to resolve this by calling the previously contained values of
+      the specific property being updated, then using them as placeholder
+    while sending the request.
+    
+    > [!NOTE]
+    > I am also yet to add the images to the property. This will be dealt with
+    eventually. Since also the user requires images uploading.
+
+commit e40a64865c09dfe276358b8045d76ead34074fb8
+Author: mbvgua <mbuguadouglas17@gmail.com>
+Date:   Mon Nov 11 15:32:46 2024 +0300
+
+    ERROR RESOLVED
+    
+    Resolved the major error that prevented me from adding properties into
+    the system. This was after having a better undertanding of the JSON
+    datatype in MSSQL and also the JSON methods in javascript.
+    
+    Steps followed included:
+    - Jsonify the details and location values once extracted from the
+      request body.
+    - Feed these Jsonfied values into the stored procedure instead of the
+      original values.
+    - In the SQL tables, values with JSON data have data type NVARCHAR(MAX)
+    
+    This proved to be an important process as by mastering this I understood
+    how to imput nested json values into my SQL db, alongside normalized
+    columns. This could prove to be quite essential, case in point:
+    citizenConnect 360.
+    
+    In the polls table, instead of adding choices as a string of CSV's, One
+    could instead input them as JSON with key values pairs.
+
+commit b250cffaafeaf2b9095a415f716daaed138dd7a7
+Author: mbvgua <mbuguadouglas17@gmail.com>
+Date:   Sun Nov 10 16:45:19 2024 +0300
+
+    *NOT* CLOSED ON SUNDAY(MAJOR BUG)
+    
+    The main issue here is nesting. In trying to add properties with nested
+    values, alot of error have arisen.
+    
+    - The first was validation using joi schema. This was promptly resolved
+      by utilizing nesting in the validation svhema, by initializing the
+    keys to objects, then the nested values to the respective values, either
+    string or number.
+    - Then came at the database level. I needed to find a way to add JSON
+      structured data into my SQL database. This turned out to be quite easy
+    due to the introduction of JSON in MsSQL. Proper documentation was also
+    available.
+    - Being able to quickly add and modify JSON columns on the raw SQL, the
+      major issue came in when integrating this at th eapplication level. In
+    the addProperty controller to be specific.
+    - I took it a step down, removed the database helpers and tried
+      implementing this using bare SQL queries with the help of the mssql
+    package, yet I got the same error. EPARAM
+    - This error seems to stem from the database side
+    - Need to look further into it. Maybe write a blog on this
+
+commit a178efb543e479e7ffad14c073368d415ed5857b
+Merge: 0de0250 2776dba
+Author: mbvgua <105845499+mbvgua@users.noreply.github.com>
+Date:   Fri Nov 8 19:10:59 2024 +0300
+
+    Merge pull request #2 from dwella-org/dev/auth
+    
+    Implement and Integrate the Auth module
+
+commit 2776dba69ed6cd9bd6a3b77e73f35d53e51bd36f
+Author: mbvgua <mbuguadouglas17@gmail.com>
+Date:   Fri Nov 8 18:52:03 2024 +0300
+
+    Refactor the auth.controllers.ts
+    
+    - significantly reduce total lines of code in the auth.controllers.ts
+      file by moving several more genarlized controllers to a new file named
+    user.controllers.ts
+    - this was because i needed to make the file leaner and easier to parse
+      through. all the major controllers associated with authentication are
+    still containe within, such as registering a new user, loggin in an
+    existing user, changing user password e.t.c
+    - the controllers moved include:
+            *updateUser     *getUser        * getUsers
+            *getUserById    * getUserByEmailOrUserName
+            *getUserByRole
+    - these seemed to focus less on the authentication bit and more on the
+      user.
+
+commit e56c71996ffa7d424b8421e2857bd8d9c532b853
+Author: mbvgua <mbuguadouglas17@gmail.com>
+Date:   Fri Nov 8 14:54:23 2024 +0300
+
+    Incorporate the final controller in the auth module
+    
+    - this include: getUsers, getUserById, getUserByEmailOrUserName,
+      getUserByRole
+    - this currently seem like the final modules in the auth module,
+      subsequent ones will be added when needed
+    - i intend to Incorporate open authentication in a separate file as the
+      lines in auth.controllers.ts have exceeded the capacity initially intended which was 300. they will be in a separate oauth.controllers.ts
+    - their routes and validation schema will however be the same
+
+commit bf4fdc8aba9f962417106ae6eed0ec066e199118
+Author: mbvgua <mbuguadouglas17@gmail.com>
+Date:   Fri Nov 8 06:42:24 2024 +0300
+
+    Resolve the deleteUser bug.
+    
+    Initially one could delete a user inifinetely, despited their deleted
+    column having already been deleted. This was an overlooking in the array
+    being returned.
+    
+    By using `const user = (await db.exec('getUserById', { id })).recordset
+    as Array<User>` an empty array was being returned, but it still
+    evaluated to true, hence a succes message was outputted.
+    
+    I modified this by ensuring only the first value of the array should be
+    found `const user = (await db.exec('getUserById', { id })).recordset[0] as User`. Now when an empty array is returned, it cannot find the first index, which causes the if(user) statement to evaluate to false.
+
+commit ee8cb796ce005988fc3251eef43a8cf8327fb3ae
+Author: mbvgua <mbuguadouglas17@gmail.com>
+Date:   Thu Nov 7 19:57:18 2024 +0300
+
+    add the delete and update user functionality
+    
+    - allowed for dynamic adding of the user is when updating, deleting and changing their password. now only need to automatically pass this in the url from the local storage when user is browsing
+    - the deleteUser function has a massive problem. It delete the same user infinitely despite having a protective measure whereby it should first check the users isDeleted=0 column. Despite this it still deletes the users whose column has already been updated to 1. Revisit this as a bugfix branch.
+
+commit e28faa116bafbfa5e628325b0732bc5272d888d5
+Author: mbvgua <mbuguadouglas17@gmail.com>
+Date:   Thu Nov 7 16:29:07 2024 +0300
+
+    add the forgot password and change password functionality
+    
+    - There is need to add the background services to properly change the forgot password from 1 back to 0 after amil has been sent
+    - also necessary for sending user email with link to change password, with the help of Ejs
+    - eventually add the payload system, this will allow retrieval of email and even id from browser cache(local storage) thus removing manual labour of typing it in themselves
+    - i need to add the spinners in the frontend, to allow the user adequate time to read the response message before proceeding to the next page.
+
+commit 7ea0c5b2dc9cf8e28fd1e514cad952a250492248
+Author: mbvgua <mbuguadouglas17@gmail.com>
+Date:   Wed Nov 6 14:01:07 2024 +0300
+
+    add the login existing users module
+    
+    Created the loginUsers controller
+    - user can login either using their username or their accounts email
+    - if none existent, the appropriate message is returned, but is correct, they are logged into their acc.
+    - have not yet incorporated payload schema. will built this gradually
+
+commit 1687898e5e83667fe06110f1ae58f3ba5633f1ba
+Author: mbvgua <mbuguadouglas17@gmail.com>
+Date:   Tue Oct 29 13:32:03 2024 +0300
+
+    build and integrate the register new user pipeline
+    
+    This incorporates all databases, collections, controllers, routes and models needed to succesfully add new users to the system
+
+commit d18d1a9e53e30cd971763faab665f928efa31f8e
+Author: mbvgua <mbuguadouglas17@gmail.com>
+Date:   Tue Oct 29 10:44:49 2024 +0300
+
+    connect the application to the mssql-server database
+
+commit 936af3097cce67c611ce2f1bcec699cf9f4a9660
+Author: mbvgua <mbuguadouglas17@gmail.com>
+Date:   Tue Oct 29 10:26:45 2024 +0300
+
+    create and configure the server
+    
+    install all the necessary node_modules needed for running the application, configure the .ts files and get the server running
+
+commit 0de025058b2231cb31f6bc6a0d6ffcf9d02f4e5d
+Author: mbvgua <105845499+mbvgua@users.noreply.github.com>
+Date:   Sun Oct 13 07:19:31 2024 +0300
+
+    Initial commit
