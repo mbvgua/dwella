@@ -1,11 +1,7 @@
-# node modules
-node_modules/
-
-# the build files
-dist/
-
-# environmental variables
+# virtual environemnt
+.venv
 .env
 
-# draft readme file
-readme.md
+# generated files
+__pycache__
+*.py[co]

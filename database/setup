@@ -1,0 +1,111 @@
+#!/usr/bin/env sh
+
+# ensure strict mode
+set -eou pipefail
+
+APP_DATABASE="dwella"
+TEST_DATABASE="test_dwella"
+TEMP_FILE="$(mktemp)"
+
+usage() {
+    echo "Usage: $0 [OPTIONS]
+
+    This script handles all the database operations.
+    Use with the following options:
+
+    -a, --all           create both production and test database
+    -d, --drop          drop all databases
+    -p, --prod          create production database
+    -t, --test          create test database
+    "
+}
+
+# remove temp files when script exists
+cleanup() {
+    rm -rf "$TEMP_FILE"
+}
+trap cleanup EXIT
+
+create_prod_db() {
+    echo "Building $APP_DATABASE database..."
+
+    # loop through db creations files, appending them to final schema
+    touch "$TEMP_FILE"
+    for file in ./schema/{tables.sql,stored_procedures.sql,views.sql,triggers.sql}; do
+        cat "$file" >> "$TEMP_FILE"
+    done
+
+    # build the entire db
+    mariadb -u root -p < "$TEMP_FILE" > output.tab
+    rm "$TEMP_FILE"
+    echo "Successfully built the production database: $APP_DATABASE"
+    echo ""
+}
+
+create_test_db() {
+    echo "Building $TEST_DATABASE database..."
+    # create the final output file
+    touch "$TEMP_FILE"
+    for file in ./schema/{tables.sql,stored_procedures.sql,views.sql,triggers.sql}; do
+        cat "$file" >> "$TEMP_FILE"
+    done
+
+    # replace prod db for test db
+    sed -i "s/$APP_DATABASE;/$TEST_DATABASE;/g" "$TEMP_FILE"
+
+    # build the entire db
+    mariadb -u root -p < "$TEMP_FILE" > output.tab
+    rm "$TEMP_FILE"
+    echo "Successfully built the test database: $TEST_DATABASE"
+    echo ""
+}
+
+
+if [[ "$#" -gt 1 ]] || [[ "$#" -eq 0 ]]; then
+    usage
+    exit 1
+elif [[ "$#" -eq 1 ]]; then
+    if [[ "$1" == "-a" ]] || [[ "$1" == "--all" ]]; then
+        echo "Building both the prod and test databases..."
+        create_test_db
+        create_prod_db
+        echo "Happy hacking!"
+        echo ""
+    elif [[ "$1" == "-d" ]] || [[ "$1" == "--drop" ]]; then
+        echo "Are you sure you want to drop the app databases? (y/N) "
+        read -r USER_CHOICE
+
+        case "$USER_CHOICE" in
+            "y" | "Y")
+                echo "Dropping the application production database: $APP_DATABASE"
+                echo "DROP DATABASE $APP_DATABASE;" > "$TEMP_FILE"
+                mariadb -u root -p < "$TEMP_FILE" > output.tab
+
+                echo "Dropping the application test database: $TEST_DATABASE"
+                echo "DROP DATABASE $TEST_DATABASE;" > "$TEMP_FILE"
+                mariadb -u root -p < "$TEMP_FILE" > output.tab
+
+                echo "Successfully droped the applications databases..."
+                echo ""
+                ;;
+            "n" | "N")
+                echo "You have aborted deletion of the application databases..."
+                echo ""
+                ;;
+            *)
+                echo "Invalid option, respond with either y/n. Try again?"
+                echo ""
+                exit 1
+                # HACK: is there a way to read user options again,then go back to top y/n
+                # read USER_CHOICE
+                ;;
+        esac
+    elif [[ "$1" == "-p" ]] || [[ "$1" == "--prod" ]]; then
+        create_prod_db
+    elif [[ "$1" == "-t" ]] || [[ "$1" == "--test" ]]; then
+        create_test_db
+    fi
+else
+    usage
+    exit 1
+fi
