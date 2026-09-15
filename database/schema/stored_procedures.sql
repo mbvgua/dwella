@@ -139,8 +139,26 @@ BEGIN
     AND is_deleted=0;
 END$$
 
--- getProperties
-CREATE PROCEDURE getProperties()
+-- getPropertyByType
+CREATE PROCEDURE getPropertyByType(
+    IN p_property_type ENUM('hostel','hotel','motel','office space','apartment')
+)
+BEGIN
+    SELECT * FROM properties
+    WHERE property_type=p_property_type
+    AND is_deleted=0;
+END$$
+
+-- getAvailableProperties
+CREATE PROCEDURE getAvailableProperties()
+BEGIN
+    SELECT * FROM properties
+    WHERE status='available'
+    AND is_deleted=0;
+END$$
+
+-- getAllProperties
+CREATE PROCEDURE getAllProperties()
 BEGIN
     SELECT * FROM properties
     WHERE is_deleted=0;
@@ -178,7 +196,7 @@ CREATE PROCEDURE addUnit(
     IN p_id VARCHAR(255),
     IN p_property_id VARCHAR(255),
     IN p_unit_number VARCHAR(20),
-    IN p_monthly_rent DECIMAL(10,2),
+    IN p_monthly_rent DECIMAL(10,2)
 )
 BEGIN
     INSERT INTO units(id,property_id,unit_number,monthly_rent)
@@ -191,8 +209,7 @@ CREATE PROCEDURE getUnitById(
 )
 BEGIN
     SELECT * FROM units
-    WHERE id=p_id
-    AND is_deleted=0;
+    WHERE id=p_id;
 END$$
 
 -- getUnitByUnitNumber
@@ -201,16 +218,14 @@ CREATE PROCEDURE getUnitByUnitNumber(
 )
 BEGIN
     SELECT * FROM units
-    WHERE unit_number=p_unit_number
-    AND is_deleted=0;
+    WHERE unit_number=p_unit_number;
 END$$
 
 -- getVacantUnits
 CREATE PROCEDURE getVacantUnits()
 BEGIN
     SELECT * FROM units
-    WHERE status='available'
-    AND is_deleted=0;
+    WHERE is_occupied=0;
 END$$
 
 -- updateUnit
@@ -224,8 +239,7 @@ CREATE PROCEDURE updateUnit(
 BEGIN
     UPDATE units
     SET property_id=p_property_id,unit_number=p_unit_number,monthly_rent=p_monthly_rent,is_occupied=p_is_occupied
-    WHERE id=p_id
-    AND is_deleted=0;
+    WHERE id=p_id;
 END$$
 
 -- deleteUnit
@@ -233,24 +247,27 @@ CREATE PROCEDURE deleteUnit(
     IN p_id VARCHAR(255)
 )
 BEGIN
-    UPDATE units
-    SET is_deleted=1
+    DELETE FROM units
     WHERE id=p_id;
 END$$
 
 -- RENTAL_CONTRACTS
 -- addRentalContract
+-- transaction ensures unit is vacant
+--      if not, it rollsback
+--      if vacant, add rental_contract then update unit as occupied
 CREATE PROCEDURE addRentalContract(
     p_id VARCHAR(255),
     p_unit_id VARCHAR(255),
     p_tenant_id VARCHAR(255),
     p_status ENUM('active','expired'),
     p_rent_amount DECIMAL(10,2),
-    p_deposit_amount DECIMAL(10,2)
+    p_deposit_amount DECIMAL(10,2),
+    p_billing_date DATETIME
 )
 BEGIN
     DECLARE vacant_units INT DEFAULT 0;
-    DECLARE rollback_message VARCHAR(255) DEFAULT 'Transaction rolled back: No vacant found';
+    DECLARE rollback_message VARCHAR(255) DEFAULT 'Transaction rolled back: Unit is not vacant!';
 
     START TRANSACTION;
 
@@ -258,16 +275,15 @@ BEGIN
     SELECT COUNT(*) INTO vacant_units
     FROM units
     WHERE id=p_unit_id
-    AND is_occupied=0
-    AND is_deleted=0;
+    AND is_occupied=0;
 
     IF vacant_units IS NULL OR vacant_units=0 THEN
         ROLLBACK;
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT=rollback_message;
     ELSE
-        INSERT INTO rental_contracts(id,unit_id,tenant_id,status,rent_amount,deposit_amount)
-        VALUES (p_id,p_unit_id,p_tenant_id,p_status,p_rent_amount,p_deposit_amount);
+        INSERT INTO rental_contracts(id,unit_id,tenant_id,status,rent_amount,deposit_amount,billing_date)
+        VALUES (p_id,p_unit_id,p_tenant_id,p_status,p_rent_amount,p_deposit_amount,p_billing_date);
 
         UPDATE units
         SET is_occupied=1
@@ -297,8 +313,8 @@ BEGIN
     AND is_deleted=0;
 END$$
 
--- getRentalContracts
-CREATE PROCEDURE getRentalContracts()
+-- getAllRentalContracts
+CREATE PROCEDURE getAllRentalContracts()
 BEGIN
     SELECT * FROM rental_contracts
     WHERE is_deleted=0;
@@ -311,15 +327,19 @@ CREATE PROCEDURE updateRentalContract(
     p_tenant_id VARCHAR(255),
     p_status ENUM('active','expired'),
     p_rent_amount DECIMAL(10,2),
-    p_deposit_amount DECIMAL(10,2)
+    p_deposit_amount DECIMAL(10,2),
+    p_billing_date DATETIME
 )
 BEGIN
     UPDATE rental_contracts
-    SET unit_id=p_unit_id,tenant_id=p_tenant_id,status=p_status,rent_amount=p_rent_amount,deposit_amount=p_deposit_amount
+    SET unit_id=p_unit_id,tenant_id=p_tenant_id,status=p_status,rent_amount=p_rent_amount,deposit_amount=p_deposit_amount,billing_date=p_billing_date
     WHERE id=p_id;
 END$$
 
 -- deleteRentalContract
+-- transaction ensures unit has an active rental contract
+--      if not, it rollsback
+--      if present, updates it to expires and soft deletes it
 CREATE PROCEDURE deleteRentalContract(
     p_id VARCHAR(255)
 )
@@ -333,6 +353,7 @@ BEGIN
     SELECT unit_id INTO select_unit_id
     FROM rental_contracts
     WHERE id=p_id
+    AND status='active'
     AND is_deleted=0;
 
     IF select_unit_id is NULL THEN
@@ -341,13 +362,12 @@ BEGIN
             SET MESSAGE_TEXT=rollback_message;
     ELSE
         UPDATE rental_contracts
-        SET is_deleted=1
+        SET is_deleted=1,status='expired'
         WHERE id=p_id;
 
         UPDATE units
         SET is_occupied=0
-        WHERE id=unit_id
-        AND is_deleted=0;
+        WHERE id=unit_id;
 
         COMMIT;
     END IF;
@@ -355,13 +375,16 @@ END$$
 
 -- PAYMENTS
 -- addPayment
+-- transcation ensures user paying has active rental contract
+--      if not, rollsback
+--      if present, make payment
 CREATE PROCEDURE addPayment(
     IN p_id VARCHAR(255),
     IN p_unit_id VARCHAR(255),
     IN p_tenant_id VARCHAR(255),
     IN p_amount DECIMAL(10,2),
     IN p_status ENUM('pending','completed','failed'),
-    IN p_payment_method ENUM('bank','mpesa','paypal'),
+    IN p_payment_method ENUM('bank','mpesa','stripe'),
     IN p_transaction_reference VARCHAR(200)
 )
 BEGIN
@@ -410,7 +433,7 @@ END$$
 
 -- getPaymentsByStatus
 CREATE PROCEDURE getPaymentsByStatus(
-    IN status ENUM('pending','completed','failed')
+    IN p_status ENUM('pending','completed','failed')
 )
 BEGIN
     SELECT * FROM payments
@@ -418,11 +441,21 @@ BEGIN
     AND is_deleted=0;
 END$$
 
+-- getPaymentsByMethod
+CREATE PROCEDURE getPaymentsByMethod(
+    IN p_payment_method ENUM('bank','mpesa','stripe')
+)
+BEGIN
+    SELECT * FROM payments
+    WHERE payment_method=p_payment_method
+    AND is_deleted=0;
+END$$
+
 -- getPayments
 CREATE PROCEDURE getPayments()
 BEGIN
     SELECT * FROM payments
-    AND is_deleted=0;
+    WHERE is_deleted=0;
 END$$
 
 -- updatePayment
@@ -432,7 +465,7 @@ CREATE PROCEDURE updatePayment(
     IN p_tenant_id VARCHAR(255),
     IN p_amount DECIMAL(10,2),
     IN p_status ENUM('pending','completed','failed'),
-    IN p_payment_method ENUM('bank','mpesa','paypal'),
+    IN p_payment_method ENUM('bank','mpesa','stripe'),
     IN p_transaction_reference VARCHAR(200)
 )
 BEGIN
@@ -575,10 +608,10 @@ CREATE PROCEDURE addMaintenanceRequest(
     IN p_unit_id VARCHAR(255),
     IN p_raised_by VARCHAR(255),
     IN p_description TEXT,
-    IN p_priority ENUM('low','medium','high'),
+    IN p_priority ENUM('low','medium','high')
 )
 BEGIN
-    INSERT INTO maintenance_requests(id,unit_id,raised_by,resolved_by,description,priority)
+    INSERT INTO maintenance_requests(id,unit_id,raised_by,description,priority)
     VALUES (p_id,p_unit_id,p_raised_by,p_description,p_priority);
 END$$
 
@@ -629,18 +662,22 @@ CREATE PROCEDURE updateMaintenanceRequest(
     IN p_status ENUM('pending','in progress','resolved')
 )
 BEGIN
-    STAR TRANSACTION;
+    START TRANSACTION;
 
-    IF p_status='resolved':
+    IF p_status='resolved' THEN
         UPDATE maintenance_requests
         SET unit_id=p_unit_id,raised_by=p_raised_by,description=p_description,priority=p_priority,status=p_status,resolved_at=NOW()
         WHERE id=p_id
         AND is_deleted=0;
+
+        COMMIT;
     ELSE
         UPDATE maintenance_requests
         SET unit_id=p_unit_id,raised_by=p_raised_by,description=p_description,priority=p_priority,status=p_status
         WHERE id=p_id
         AND is_deleted=0;
+
+        COMMIT;
     END IF;
 END$$
 

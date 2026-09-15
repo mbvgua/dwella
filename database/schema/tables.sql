@@ -6,7 +6,7 @@ CREATE TABLE users(
     username VARCHAR(100) UNIQUE NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    role ENUM('tenant','owner','admin') NOT NULL DEFAULT 'tenant',
+    role ENUM('tenant','owner','admin') NOT NULL,
     phone_number VARCHAR(20) NOT NULL,
     image_file VARCHAR(255) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -44,7 +44,8 @@ CREATE TABLE rental_contracts(
     rent_amount DECIMAL(10,2) NOT NULL CHECK (rent_amount > 0),
     deposit_amount DECIMAL(10,2) NOT NULL CHECK (deposit_amount > 0),
     start_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    end_date DATETIME NOT NULL,
+    end_date DATETIME, -- input by trigger
+    billing_date DATETIME NOT NULL,
     is_deleted BOOL DEFAULT 0,
     FOREIGN KEY (unit_id) REFERENCES units(id) ON DELETE CASCADE,
     FOREIGN KEY (tenant_id) REFERENCES users(id) ON DELETE CASCADE
@@ -56,7 +57,7 @@ CREATE TABLE payments(
     tenant_id VARCHAR(255),
     amount DECIMAL(10,2) NOT NULL CHECK (amount > 0),
     status ENUM('pending','completed','failed') NOT NULL,
-    payment_method ENUM('bank','mpesa','paypal') NOT NULL,
+    payment_method ENUM('bank','mpesa','stripe') NOT NULL,
     transaction_reference VARCHAR(200) UNIQUE NOT NULL,
     paid_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_deleted BOOL DEFAULT 0,
@@ -88,7 +89,7 @@ CREATE TABLE maintenance_requests(
     resolved_at DATETIME DEFAULT NULL,
     is_deleted BOOL DEFAULT 0,
     FOREIGN KEY (unit_id) REFERENCES units(id) ON DELETE SET NULL,
-    FOREIGN KEY (raised_by) REFERENCES users(id) ON DELETE SET NULL
+    FOREIGN KEY (raised_by) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (resolved_by) REFERENCES users(id) ON DELETE SET NULL
 );
 

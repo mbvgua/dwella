@@ -2,6 +2,7 @@
 defines the applications environmental variables
 """
 
+from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -17,7 +18,13 @@ class Settings(BaseSettings):
         case_sensitive=False,
     )
 
-    database_url: str
+    db_host: str
+    db_port: str
+    db_user: str
+    db_password: SecretStr = SecretStr("")
+    db_name: str
+    db_test_name: str
 
 
-settings = Settings()
+def get_settings() -> Settings:
+    return Settings()

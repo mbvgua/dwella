@@ -67,8 +67,8 @@ if [[ "$#" -gt 1 ]] || [[ "$#" -eq 0 ]]; then
 elif [[ "$#" -eq 1 ]]; then
     if [[ "$1" == "-a" ]] || [[ "$1" == "--all" ]]; then
         echo "Building both the prod and test databases..."
-        create_test_db
         create_prod_db
+        create_test_db
         echo "Happy hacking!"
         echo ""
     elif [[ "$1" == "-d" ]] || [[ "$1" == "--drop" ]]; then

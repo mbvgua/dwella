@@ -5,7 +5,6 @@ all: install prod
 
 install:
 	@echo "Installing project dependecies..."
-	pip install --pre mariadb
 	pip install -r requirements.txt
 	# python -m scripts.populate_db
 
