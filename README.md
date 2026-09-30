@@ -6,7 +6,8 @@ Dwella is a comprehensive digital platform designed to bridge communication and 
 
 ## Getting Started
 
-> [!NOTE] Prerequisites
+> [!NOTE]
+> Prerequisites
 >
 > - Python 3.9+
 > - Node.js 16+
@@ -26,23 +27,23 @@ Dwella is a comprehensive digital platform designed to bridge communication and 
 
 2. **Backend Setup**
 
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate        # if on windows, too bad :/
-cp .env.example .env            # Edit .env with your database, JWT secret, etc.
-make install
-make prod
-```
+   ```bash
+   cd backend
+   python -m venv venv
+   source venv/bin/activate        # if on windows, too bad :/
+   cp .env.example .env            # Edit .env with your database, JWT secret, etc.
+   make install
+   make prod
+   ```
 
 3. **Frontend Setup**
 
-```bash
-cd frontend
-npm install
-cp .env.example .env            # Edit .env with your database, JWT secret, etc.
-npm start
-```
+   ```bash
+   cd frontend
+   npm install
+   cp .env.example .env            # Edit .env with your database, JWT secret, etc.
+   npm start
+   ```
 
 The backend will be available at `http://localhost:8000` (with docs at `/docs`), and the frontend at `http://localhost:3000`.
 
@@ -50,9 +51,9 @@ The backend will be available at `http://localhost:8000` (with docs at `/docs`),
 
 The easiest way is to use Docker Compose:
 
-```bash
-cp .env.example .env            # Edit .env with your database, etc.
-docker-compose up
-```
+    ```bash
+    cp .env.example .env            # Edit .env with your database, etc.
+    docker-compose up
+    ```
 
 This will spin up the backend, frontend, database, Redis, and RabbitMQ.

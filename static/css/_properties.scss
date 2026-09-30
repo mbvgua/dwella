@@ -1,0 +1,103 @@
+// Custom Helper Classes
+.btn-royal-purple {
+  background-color: $royal-purple;
+  color: #ffffff;
+  border: none;
+  transition: all 0.2s ease-in-out;
+
+  &:hover,
+  &:focus {
+    background-color: $royal-purple-hover;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba($royal-purple, 0.3);
+  }
+}
+
+.text-royal-purple {
+  color: $royal-purple !important;
+}
+
+.bg-teal {
+  background-color: $teal-verified !important;
+}
+
+.x-small {
+  font-size: 0.75rem;
+}
+
+/* Property Card Styling */
+.property-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+
+    .card-img-top {
+      transform: scale(1.04);
+    }
+  }
+
+  .img-container {
+    height: 210px;
+    position: relative;
+    overflow: hidden;
+
+    .card-img-top {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .badge-stack {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      display: flex;
+      gap: 6px;
+      z-index: 2;
+    }
+
+    .btn-favorite {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 2;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(4px);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #475569;
+      transition: color 0.2s ease, background 0.2s ease;
+
+      &:hover {
+        color: #ef4444;
+        background: #ffffff;
+      }
+    }
+  }
+}
+
+/* Detail View Gallery */
+#detail-gallery {
+  height: 420px;
+
+  img {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #detail-thumbnails {
+    height: 100%;
+
+    div {
+      height: 206px;
+    }
+  }
+}

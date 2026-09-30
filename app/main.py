@@ -1,6 +1,8 @@
 from contextlib import asynccontextmanager
 
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from app.database import get_db, init_pool, close_pool
 
@@ -27,14 +29,11 @@ app = FastAPI(
     },
 )
 
+# define the directories for templates & static files
+templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
-@app.get("/")
-async def home():
-    return "hello there"
+# import and register the routes
+from app.routers.pages.public import router as public_router
 
-
-@app.get("/users")
-async def list_users(db=Depends(get_db)):
-    await db.execute("SELECT * FROM users;")
-    data = await db.fetchall()
-    return data
+app.include_router(public_router)

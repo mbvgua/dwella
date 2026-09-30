@@ -1,0 +1,141 @@
+.btn-primary {
+  background-color: $primary-colour;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  padding: .5rem;
+
+  &:hover {
+    background-color: $primary-colour;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba($primary-colour, 0.4);
+  }
+}
+
+/* ==========================================================================
+   ANIMATED NAVBAR & OFF-CANVAS STYLES
+   ========================================================================== */
+
+#main-header {
+  transition: padding 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1030;
+
+  #floating-navbar {
+    width: 100%;
+    max-width: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+    // Default logo state at full size
+    .brand-logo-icon {
+      height: 2.25rem; // Set responsive height (~36px)
+      width: auto; // Maintain natural aspect ratio
+      object-fit: contain;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), height 0.4s ease;
+    }
+
+    .brand-name {
+      font-size: 1.35rem;
+      color: #ffffff;
+      transition: font-size 0.4s ease;
+    }
+
+    .nav-link {
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 500;
+      font-size: 1rem;
+      padding: 0.5rem 0.85rem;
+      transition: all 0.3s ease;
+
+      &:hover,
+      &.active {
+        color: $accent-colour;
+      }
+    }
+  }
+
+  /* Scrolled Transformation Class */
+  &.scrolled {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+
+    #floating-navbar {
+      max-width: 960px;
+      background-color: rgba($secondary-colour, 0.92);
+      border-radius: 50px;
+      padding: 0.4rem 1.25rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      border-color: rgba($accent-colour, 0.25);
+
+      .brand-logo-icon {
+        transform: scale(0.85);
+      }
+
+      .brand-name {
+        font-size: 1.15rem;
+      }
+
+      .nav-link {
+        font-size: 0.9rem;
+        padding-top: 0.3rem;
+        padding-bottom: 0.3rem;
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   MOBILE OFF-CANVAS DRAWER CUSTOMIZATION
+   ========================================================================== */
+
+@media (max-width: 991.98px) {
+  #main-header {
+    #floating-navbar {
+      .brand-logo-icon {
+        height: 1.85rem; // Slightly smaller base size on mobile screens
+      }
+
+      .brand-name {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  .offcanvas.offcanvas-end {
+    width: 75vw !important; // Exactly 3/4 screen width
+    height: 100vh !important;
+    background-color: rgba($secondary-colour, 0.98);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-left: 1px solid rgba($accent-colour, 0.2);
+
+    .offcanvas-header {
+      padding: 1.25rem 1.5rem;
+
+      .brand-logo-icon {
+        height: 2rem;
+        width: auto;
+      }
+    }
+
+    .offcanvas-body {
+      padding: 1.5rem;
+    }
+
+    .nav-link {
+      font-size: 1.1rem !important;
+      padding: 0.75rem 0 !important;
+    }
+  }
+
+  // Soft dark backdrop overlay adjustment
+  .offcanvas-backdrop.show {
+    opacity: 0.6;
+    background-color: #000000;
+  }
+}

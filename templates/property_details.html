@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% if title %}
+<title> {{ title }} </title>
+{% else %}
+<title>Homepage | Dwella</title>
+{% endif %}
+
+{% block body %}
+<main id="detail-view" class="container py-4 d-none">
+
+    <!-- Breadcrumb Navigation -->
+    <nav class="small text-muted mb-3" aria-label="breadcrumb">
+        <button id="back-btn" class="btn btn-link btn-sm p-0 text-decoration-none text-muted fw-semibold">
+            <i class="bi bi-arrow-left me-1"></i> Back to main site
+        </button>
+        <span class="mx-2">/</span> Listings <span class="mx-2">/</span> Mombasa <span class="mx-2">/</span>
+        <span class="text-dark fw-semibold" id="detail-breadcrumb-title"></span>
+    </nav>
+
+    <!-- Image Gallery Grid -->
+    <div class="row g-2 rounded-4 overflow-hidden mb-4" id="detail-gallery">
+        <div class="col-md-8">
+            <img id="detail-main-img" src="" class="w-full h-100 object-fit-cover rounded-start-4"
+                alt="Main property view" />
+        </div>
+        <div class="col-md-4">
+            <div class="row row-cols-2 g-2" id="detail-thumbnails">
+                <!-- Thumbnail grid rendered by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Details -->
+    <div class="mb-4">
+        <div class="h3 fw-bold text-dark mb-2" id="detail-price-header"></div>
+        <div class="d-flex align-items-center gap-2 mb-2" id="detail-badges"></div>
+        <h2 class="h3 fw-bold text-dark" id="detail-title"></h2>
+        <p class="text-muted small mb-0"><i class="bi bi-geo-alt me-1"></i><span id="detail-location"></span></p>
+    </div>
+
+    <!-- Quick Stats Bar -->
+    <div class="card border border-light-subtle rounded-3 p-3 mb-4">
+        <div class="row text-center divide-x" id="detail-stats">
+            <div class="col"><i class="bi bi-door-open me-2 text-muted"></i><span id="stat-beds"></span> beds</div>
+            <div class="col border-start"><i class="bi bi-droplet me-2 text-muted"></i><span id="stat-baths"></span>
+                baths</div>
+            <div class="col border-start"><i class="bi bi-aspect-ratio me-2 text-muted"></i><span id="stat-size"></span>
+                m²</div>
+            <div class="col border-start"><span id="stat-type"></span></div>
+        </div>
+    </div>
+
+    <!-- Main Content & Sidebar -->
+    <div class="row g-5">
+        <!-- Left Column: Amenities & Description -->
+        <div class="col-lg-8">
+            <!-- Amenities Section -->
+            <section class="mb-5">
+                <h3 class="h5 fw-bold mb-3">What this place offers</h3>
+                <div class="row row-cols-2 g-3 text-secondary small" id="amenities-list">
+                    <div><i class="bi bi-wifi me-2 text-dark"></i> Wifi</div>
+                    <div><i class="bi bi-car-front me-2 text-dark"></i> Free parking on premises</div>
+                    <div><i class="bi bi-egg-fried me-2 text-dark"></i> Kitchen</div>
+                    <div><i class="bi bi-briefcase me-2 text-dark"></i> Dedicated workspace</div>
+                    <div><i class="bi bi-tv me-2 text-dark"></i> TV</div>
+                    <div><i class="bi bi-wind me-2 text-dark"></i> Air conditioning</div>
+                    <div><i class="bi bi-tsunami me-2 text-dark"></i> Hot water</div>
+                    <div><i class="bi bi-camera-video me-2 text-dark"></i> Security cameras</div>
+                    <div><i class="bi bi-emoji-smile me-2 text-dark"></i> Pets allowed</div>
+                    <div><i class="bi bi-tree me-2 text-dark"></i> Garden or backyard</div>
+                </div>
+                <button class="btn btn-link btn-sm text-dark fw-semibold p-0 mt-3 text-decoration-underline">
+                    Show all 13 amenities
+                </button>
+            </section>
+
+            <hr class="text-muted" />
+
+            <!-- Description Section -->
+            <section class="mt-4">
+                <h3 class="h5 fw-bold mb-2">About this property</h3>
+                <p class="text-secondary small leading-relaxed" id="detail-description"></p>
+            </section>
+        </div>
+
+        <!-- Right Column: Sticky Booking Widget -->
+        <div class="col-lg-4">
+            <div class="card border border-light-subtle rounded-4 p-4 shadow-sm sticky-top" style="top: 2rem;">
+                <div class="h4 fw-bold text-dark mb-4" id="detail-widget-price"></div>
+                <button class="btn btn-royal-purple w-100 py-3 fw-medium mb-2">Schedule a viewing</button>
+                <p class="text-center text-muted x-small mb-3">You won't be charged yet</p>
+                <div class="text-center">
+                    <button class="btn btn-link btn-sm text-muted text-decoration-none x-small">Report this
+                        listing</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock body %}

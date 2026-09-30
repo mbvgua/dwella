@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Dwella" />
+
+    <!-- Site Info -->
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>Dwella</title>
+    {% endif %}
+
+    <!-- Open Graph Tags: The title of the page for social media sharing. It can match the title tag or be more descriptive. -->
+    <meta property="og:title" content="Dwella" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <meta property="og:image:alt" content="" />
+
+    <!-- bootstrap css -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- stylesheet. load after bootstrap -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{url_for('static', path='css/main.css')}} "
+    />
+
+    <!-- Favicon for all browsers -->
+    <link
+      rel="icon"
+      href=" {{url_for('static', path='icons/favicon.ico')}}"
+      sizes="any"
+    />
+    <link
+      rel="icon"
+      href=" {{url_for('static', path='icons/icon.svg')}}"
+      type="image/svg+xml"
+    />
+
+    <!-- Apple touch icon for iOS devices -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href=" {{url_for('static', path='icons/apple-touch-icon.png')}}"
+    />
+
+    <!-- Web app manifest for Progressive Web Apps -->
+    <link
+      rel="manifest"
+      href=" {{url_for('static', path='site.webmanifest')}}"
+    />
+
+    <!-- Content Security Policy: Uncomment to enhance security by restricting where content can be loaded from (useful for preventing certain attacks like XSS). Update if adding external sources (e.g., Google Fonts, Bootstrap CDN, analytics, etc). -->
+    <!-- <meta http-equiv="Content-Security-Policy" content=" default-src 'self'; script-src 'self' code.jquery.com; style-src 'self' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' images.examplecdn.com; "> -->
+  </head>
+  <body>
+    <!-- Floating Sticky Header Wrapper -->
+    <header id="main-header" class="fixed-top py-3">
+      <div class="container-fluid px-3 px-lg-5">
+        <nav
+          id="floating-navbar"
+          class="navbar navbar-expand-lg navbar-dark mx-auto"
+        >
+          <div class="container-fluid">
+            <!-- Logo & Brand -->
+            <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+              <img
+                class="brand-logo-icon"
+                src="{{url_for('static', path='images/logo.png')}}"
+                alt="Dwella logo"
+              />
+              <span class="brand-name fw-bold">Dwella</span>
+            </a>
+
+            <!-- Mobile Hamburger Toggle (Triggers Offcanvas Drawer) -->
+            <button
+              class="navbar-toggler border-0 shadow-none"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasNavbar"
+              aria-controls="offcanvasNavbar"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Offcanvas Side Drawer for Small Screens / Regular Navbar for Large Screens -->
+            <div
+              class="offcanvas offcanvas-end"
+              data-bs-scroll="true"
+              {#
+              data-bs-backdrop="false"
+              #}
+              tabindex="-1"
+              id="offcanvasNavbar"
+              aria-labelledby="offcanvasNavbarLabel"
+            >
+              <!-- Mobile Offcanvas Header (Shows Logo & 'X' Close Icon) -->
+              <div
+                class="offcanvas-header border-bottom border-white border-opacity-10 d-lg-none"
+              >
+                <h5
+                  class="offcanvas-title d-flex align-items-center gap-2"
+                  id="offcanvasNavbarLabel"
+                >
+                  <img
+                    class="brand-logo-icon"
+                    src="{{url_for('static', path='images/logo.png')}}"
+                    alt="Dwella logo"
+                  />
+                  <span class="fw-bold text-white">Dwella</span>
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white shadow-none"
+                  data-bs-dismiss="offcanvas"
+                  aria-label="Close"
+                ></button>
+              </div>
+
+              <!-- Mobile Offcanvas / Desktop Nav Body -->
+              <div
+                class="offcanvas-body d-flex flex-column flex-lg-row justify-content-lg-between align-items-lg-center"
+              >
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-2">
+                  <li class="nav-item">
+                    <a class="nav-link active" href="#">Properties</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Features</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                  </li>
+                </ul>
+
+                <!-- CTA Buttons -->
+                <div
+                  class="d-flex flex-column flex-lg-row align-items-lg-center gap-2 mt-auto mt-lg-0 pt-3 pt-lg-0 border-top border-white border-opacity-10 border-lg-0"
+                >
+                  <a href="#" class="btn btn-primary btn-sm rounded-pill px-3"
+                    >Sign In</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    {% block body %} {% endblock body %}
+
+    <!-- footer section -->
+    <footer class="site-footer pt-5 mt-auto">
+      <div class="container py-4 py-lg-5">
+        <div class="row g-4 justify-content-between">
+          <!-- Column 1: Brand & Bio -->
+          <div class="col-lg-4 col-md-6">
+            <a
+              class="d-flex align-items-center gap-2 text-decoration-none mb-3"
+              href="#"
+            >
+              <img
+                class="footer-logo"
+                src="{{url_for('static', path='images/logo.png')}}"
+                alt="Dwella logo"
+              />
+              <span class="brand-name fw-bold fs-4 text-white">Dwella</span>
+            </a>
+            <p class="small text-white-50 mb-4">
+              Redefining luxury living and property management. Find your
+              sanctuary, streamline rental contracts, and elevate your home
+              search experience.
+            </p>
+            <!-- Social Icons -->
+            <div class="d-flex gap-2">
+              <a href="#" class="social-icon" aria-label="Facebook">
+                <svg
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"
+                  />
+                </svg>
+              </a>
+              <a href="#" class="social-icon" aria-label="Twitter">
+                <svg
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58 6.32 6.32 0 0 1 0 13.535a9.286 9.286 0 0 0 5.026 1.465"
+                  />
+                </svg>
+              </a>
+              <a href="#" class="social-icon" aria-label="Instagram">
+                <svg
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002z"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Column 2: Properties -->
+          <div class="col-lg-2 col-md-6 col-6">
+            <h6 class="footer-title">Properties</h6>
+            <ul class="list-unstyled footer-links mb-0">
+              <li><a href="#">Apartments</a></li>
+              <li><a href="#">Office Spaces</a></li>
+              <li><a href="#">Hostels & Motels</a></li>
+              <li><a href="#">Luxury Hotels</a></li>
+              <li><a href="#">Featured Units</a></li>
+            </ul>
+          </div>
+
+          <!-- Column 3: Company Links -->
+          <div class="col-lg-2 col-md-6 col-6">
+            <h6 class="footer-title">Company</h6>
+            <ul class="list-unstyled footer-links mb-0">
+              <li><a href="#">About Dwella</a></li>
+              <li><a href="#">Careers</a></li>
+              <li><a href="#">Landlord Portal</a></li>
+              <li><a href="#">Support Center</a></li>
+              <li><a href="#">Contact Us</a></li>
+            </ul>
+          </div>
+
+          <!-- Column 4: Newsletter -->
+          <div class="col-lg-3 col-md-6">
+            <h6 class="footer-title">Stay Connected</h6>
+            <p class="small text-white-50">
+              Subscribe to receive exclusive listings and property insights.
+            </p>
+            <form class="mt-3">
+              <div class="input-group">
+                <input
+                  type="email"
+                  class="form-control newsletter-input"
+                  placeholder="Your email address"
+                  aria-label="Your email address"
+                  required
+                />
+                <button class="btn btn-subscribe" type="submit">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm-1.66-2.126-4.338 2.76 11.832 4.733L4.976 7.944Z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div
+          class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-5"
+        >
+          <p class="small text-white-50 mb-0">
+            &copy; 2026 Dwella Inc. All rights reserved.
+          </p>
+          <div class="d-flex gap-4 small">
+            <a href="#" class="text-white-50 text-decoration-none"
+              >Privacy Policy</a
+            >
+            <a href="#" class="text-white-50 text-decoration-none"
+              >Terms of Service</a
+            >
+            <a href="#" class="text-white-50 text-decoration-none"
+              >Cookies Settings</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- end footer section -->
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- add custom scripts -->
+    {% block scripts %} {% endblock scripts %}
+
+    <!-- Scroll Detection Script -->
+    <script>
+      const header = document.getElementById("main-header");
+
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 16) {
+          header.classList.add("scrolled");
+        } else {
+          header.classList.remove("scrolled");
+        }
+      });
+    </script>
+  </body>
+</html>

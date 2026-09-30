@@ -1,6 +1,12 @@
 """
-defines the applications environmental variables
+defines the applications environmental variables. use pyrdantic_settings is a
+modern replacement for the classic python_dotenv module with some added niceties
+
+NOTE:
+    - ref: https://fastapi.tiangolo.com/advanced/settings/
 """
+
+from functools import lru_cache
 
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -8,8 +14,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     """
-    use pyrdantic_settings is a modern replacement for the classic
-    python_dotenv module.
+    defines the settings class that will hold our specific environmental
+    varibales. it inherits from the BaseSettings pydantic class. pydantic reads
+    these values in a case-insensitive way
     """
 
     model_config = SettingsConfigDict(
@@ -26,5 +33,13 @@ class Settings(BaseSettings):
     db_test_name: str
 
 
+@lru_cache()
 def get_settings() -> Settings:
+    """
+    this methods makes it easier to use our Settings defined above via
+    dependency injection. Normally, we would use "settings=Settings()", but
+    this defines 1 default instance throughout our application. instead calling
+    it this way with lru_cache creates it only once and caches it, andalso allows
+    for dependency overrides
+    """
     return Settings()

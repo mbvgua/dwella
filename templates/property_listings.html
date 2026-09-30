@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% if title %}
+<title> {{ title }} </title>
+{% else %}
+<title>Homepage | Dwella</title>
+{% endif %}
+
+{% block body %}
+<main id="listings-view" class="container py-5">
+
+    <!-- Search & Filter Bar -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 mb-5">
+        <div class="row g-3 align-items-center">
+            <div class="col-md">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" id="search-input" class="form-control bg-light border-start-0 rounded-end-3"
+                        placeholder="Search location, property name..." />
+                </div>
+            </div>
+            <div class="col-md-auto d-flex gap-2">
+                <button class="btn btn-royal-purple filter-btn active" data-filter="all">All Listings</button>
+                <button class="btn btn-outline-secondary filter-btn rounded-3" data-filter="Rent">Rent</button>
+                <button class="btn btn-outline-secondary filter-btn rounded-3" data-filter="Short stay">Short
+                    stay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 fw-bold text-dark mb-0">Featured listings</h1>
+        <button class="btn btn-sm btn-outline-dark rounded-3 px-3">View all</button>
+    </div>
+
+    <!-- Listings Grid -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4" id="property-grid">
+        <!-- Property cards rendered dynamically by JS -->
+    </div>
+</main>
+
+{% endblock body %}

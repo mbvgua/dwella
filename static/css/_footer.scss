@@ -1,0 +1,135 @@
+/* ==========================================================================
+   STYLISTIC FOOTER STYLES
+   ========================================================================== */
+
+.site-footer {
+  background-color: $accent-colour;
+  color: rgba(255, 255, 255, 0.75);
+  border-top: 1px solid rgba($secondary-colour, 0.4);
+  position: relative;
+  overflow: hidden;
+
+  // Background subtle glow detail
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 15%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba($secondary-colour, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+    pointer-events: none;
+  }
+
+  .footer-logo {
+    height: 2rem;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .footer-title {
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 28px;
+      height: 2px;
+      background-color: $secondary-colour;
+      border-radius: 2px;
+    }
+  }
+
+  .footer-links {
+    li {
+      margin-bottom: 0.65rem;
+    }
+
+    a {
+      color: rgba(255, 255, 255, 0.65);
+      text-decoration: none;
+      font-size: 0.925rem;
+      transition: all 0.3s ease;
+      display: inline-block;
+
+      &:hover {
+        color: #ffffff;
+        transform: translateX(4px);
+      }
+    }
+  }
+
+  // Social Media Icons
+  .social-icon {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba($primary-colour, 0.5);
+    color: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: $secondary-colour;
+      color: #ffffff;
+      transform: translateY(-3px);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 12px rgba($secondary-colour, 0.5);
+    }
+  }
+
+  // Newsletter Input Group
+  .newsletter-input {
+    background-color: rgba($primary-colour, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    border-radius: 50px 0 0 50px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+
+    &:focus {
+      background-color: rgba($primary-colour, 0.8);
+      border-color: $secondary-colour;
+      box-shadow: none;
+      color: #ffffff;
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+  }
+
+  .btn-subscribe {
+    background-color: $secondary-colour;
+    color: #ffffff;
+    border-radius: 0 50px 50px 0;
+    padding: 0.6rem 1.25rem;
+    border: 1px solid $secondary-colour;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: lighten($secondary-colour, 8%);
+      border-color: lighten($secondary-colour, 8%);
+      color: #ffffff;
+    }
+  }
+
+  // Footer Bottom Bar
+  .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+    a:hover {
+      color: #ffffff !important;
+    }
+  }
+}
